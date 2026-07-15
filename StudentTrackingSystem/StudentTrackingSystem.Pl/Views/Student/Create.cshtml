@@ -1,0 +1,336 @@
+﻿@using StudentTrackingSystem.PL.DTOs
+@model StudentDTO
+
+@{
+    ViewData["Title"] = "Add Student";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/auth-styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            margin: 2rem auto;
+            width: 95%;
+            max-width: 1000px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-4px);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-top: 1rem;
+        }
+
+        .auth-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-section-title {
+            color: #2c3e50;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            color: #6c757d;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .photo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #uploadBtn {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        #uploadBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-group .btn {
+            padding: 12px 24px;
+        }
+
+        .btn-outline-primary {
+            border-color: #6B73FF;
+            color: #6B73FF;
+        }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            border-color: transparent;
+        }
+
+        .btn-check:checked + .btn-outline-primary {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <div class="auth-container">
+        <a href="javascript:history.back()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        <div class="auth-header">
+            <h1>ADD STUDENT</h1>
+            <p class="text-muted">Enter student information</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="auth-form needs-validation" novalidate>
+            @Html.AntiForgeryToken()
+
+            <div class="row g-4">
+                <!-- Left Column - Student Information -->
+                <div class="col-md-6">
+                    <h2 class="form-section-title h5 mb-3">Student Information</h2>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input asp-for="FullName" class="form-control" placeholder="Full Name" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter the student's full name.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input asp-for="EmailAddress" type="email" class="form-control" placeholder="Email Address" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input asp-for="PhoneNo" type="tel" class="form-control" placeholder="Phone Number" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter a phone number.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input asp-for="Address" class="form-control" placeholder="Address" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter an address.</div>
+                    </div>
+
+                    <!-- Parent Information -->
+                    <h2 class="form-section-title h5 mb-3 mt-4">Parent Information</h2>
+                    
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user-friends"></i></span>
+                            <input asp-for="ParentName" class="form-control" placeholder="Parent Name" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter the parent's name.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input asp-for="ParentEmail" type="email" class="form-control" placeholder="Parent Email" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter a valid parent email.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            <input asp-for="ParentPhone" type="tel" class="form-control" placeholder="Parent Phone" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter the parent's phone number.</div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Additional Information -->
+                <div class="col-md-6">
+                    <h2 class="form-section-title h5 mb-3">Additional Information</h2>
+                    
+                    <!-- Student Photo -->
+                    <div class="text-center mb-4">
+                        <div class="photo-container mb-2">
+                            <img id="photoPreview" src="~/images/profile-picture.png" alt="Student Photo Preview" 
+                                 class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <input type="file" id="studentImage" name="studentImage" accept="image/*" class="form-control d-none" />
+                        <button type="button" class="btn btn-secondary btn-sm" id="uploadBtn">
+                            <i class="fas fa-upload"></i> Upload Photo
+                        </button>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                            <select asp-for="Grade" class="form-control" asp-items="ViewBag.Grades" required>
+                                <option value="">Select Grade</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select a grade.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                        </div>
+                        <div class="invalid-feedback">Please enter the date of birth.</div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="d-block mb-2">Gender</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" asp-for="Gender" id="male" value="Male" required>
+                            <label class="btn btn-outline-primary" for="male">
+                                <i class="fas fa-mars me-2"></i>Male
+                            </label>
+                            
+                            <input type="radio" class="btn-check" asp-for="Gender" id="female" value="Female" required>
+                            <label class="btn btn-outline-primary" for="female">
+                                <i class="fas fa-venus me-2"></i>Female
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-save me-2"></i>Create Student
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    <script>
+        // Photo upload preview
+        document.getElementById('uploadBtn').addEventListener('click', function() {
+            document.getElementById('studentImage').click();
+        });
+
+        document.getElementById('studentImage').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photoPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+</html>
+

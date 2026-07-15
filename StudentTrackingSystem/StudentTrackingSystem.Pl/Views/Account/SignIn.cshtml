@@ -1,0 +1,115 @@
+﻿@using StudentTrackingSystem.PL.DTOs
+@model SignInDTO
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign In | Student Tracking System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/auth-styles.css" />
+    <style>
+        /* Base styles for all devices */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Full-screen styling for mobile */
+        @@media (max-width: 768px) {
+            body {
+                display: block;
+                padding: 0;
+            }
+
+            .auth-container {
+                width: 100vw;
+                max-width: 100vw;
+                min-height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+                padding: 2rem 1rem;
+                margin: 0;
+            }
+
+            .particles {
+                display: none;
+            }
+
+            .auth-form {
+                padding: 0 0.5rem;
+            }
+        }
+
+        /* Larger screens */
+        @@media (min-width: 769px) {
+            .auth-container {
+                max-width: 500px;
+                margin: 1rem auto;
+            }
+        }
+
+        /* Prevent horizontal overflow */
+        .form-control, .input-group, .auth-btn {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>SIGN IN</h1>
+            <p class="text-muted">Welcome back! Please enter your credentials</p>
+        </div>
+
+        <form asp-action="SignIn" method="post" class="auth-form">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input asp-for="Email" class="form-control" placeholder="Email" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" required />
+                    <span class="input-group-text toggle-password" id="togglePassword">
+                        <i class="bi bi-eye-slash"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group form-check">
+                <input asp-for="RememberMy" class="form-check-input" />
+                <label class="form-check-label" asp-for="RememberMy">Remember me</label>
+            </div>
+
+            <button type="submit" class="auth-btn">SIGN IN</button>
+
+            <div class="text-center mt-3">
+                <a asp-action="ForgetPassword" class="auth-link">Forgot password?</a>
+            </div>
+
+            <div class="text-center mt-3">
+                <p>Don't have an account? <a asp-action="SignUp" class="auth-link">Sign up</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+</body>
+</html>

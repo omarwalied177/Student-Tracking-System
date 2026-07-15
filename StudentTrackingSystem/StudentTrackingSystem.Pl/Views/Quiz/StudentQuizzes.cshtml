@@ -1,0 +1,151 @@
+@model IEnumerable<StudentTrackingSystem.Pl.DTOs.QuizDetailsDTO>
+
+@{
+    ViewData["Title"] = "Available Quizzes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="page-title mb-0">Available Quizzes</h1>
+                    <p class="text-muted">Select a quiz to start</p>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info shadow-sm">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No quizzes available at the moment.
+                </div>
+            }
+            else
+            {
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach (var quiz in Model)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm hover-card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">@quiz.Name</h5>
+                                        <span class="badge @(quiz.IsSubmitted ? "bg-success" : "bg-warning")">
+                                            @(quiz.IsSubmitted ? "Submitted" : "Not Submitted")
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span><i class="fas fa-graduation-cap text-primary me-2"></i>@quiz.Grade</span>
+                                            <span><i class="fas fa-book text-success me-2"></i>@quiz.Subject</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span><i class="fas fa-star text-warning me-2"></i>@quiz.TotalMarks marks</span>
+                                            <span><i class="fas fa-user-tie text-info me-2"></i>@quiz.TeacherName</span>
+                                        </div>
+                                    </div>
+                                    <div class="time-info">
+                                        <div class="mb-2">
+                                            <i class="fas fa-play-circle text-success me-2"></i>
+                                            <span>Starts: @quiz.StartTime.ToString("dd/MM/yyyy HH:mm")</span>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-stop-circle text-danger me-2"></i>
+                                            <span>Ends: @quiz.EndTime.ToString("dd/MM/yyyy HH:mm")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0">
+                                    @if (!quiz.IsSubmitted)
+                                    {
+                                        <a asp-action="TakeQuiz" asp-route-id="@quiz.Id" 
+                                           class="btn btn-primary w-100">
+                                            <i class="fas fa-pencil-alt me-2"></i> Start Quiz
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-success w-100" disabled>
+                                            <i class="fas fa-check me-2"></i> Submitted
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+</body>
+</html>
+
+<style>
+    .hover-card {
+        transition: all 0.3s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+    }
+    .btn-hover {
+        transition: all 0.3s ease;
+    }
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .time-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    .badge {
+        padding: 0.5em 1em;
+    }
+</style> 

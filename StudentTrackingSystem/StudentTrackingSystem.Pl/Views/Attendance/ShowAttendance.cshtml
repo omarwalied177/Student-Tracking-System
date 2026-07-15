@@ -1,0 +1,159 @@
+@model List<StudentTrackingSystem.Pl.DTOs.AttendanceDTO>
+@using StudentTrackingSystem.DAL.Models
+
+@{
+    ViewData["Title"] = "Show Attendance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var highlightId = Context.Request.Query["highlight"].ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0 fw-semibold">
+                                    <i class="fas fa-calendar-check me-2"></i>Attendance Records
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <form method="get" class="form-inline">
+                                        <div class="form-floating">
+                                            <select name="grade" class="form-select" id="gradeSelect" onchange="this.form.submit()">
+                                                <option value="">All Grades</option>
+                                                @foreach (Grade grade in ViewBag.Grades)
+                                                {
+                                                    if (Context.Request.Query["grade"] == grade.Name)
+                                                    {
+                                                        <option value="@grade.Name" selected>@grade.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@grade.Name">@grade.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <label for="gradeSelect">Filter by Grade</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Student Name</th>
+                                            <th>Grade</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var attendance in Model)
+                                        {
+                                            <tr class="@(attendance.Id.ToString() == highlightId ? "table-warning" : "")" id="attendance-@attendance.Id">
+                                                <td>@attendance.StudentName</td>
+                                                <td>
+                                                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                        @attendance.Grade
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <i class="far fa-calendar-alt text-muted me-1"></i>
+                                                    @attendance.Date.ToString("dd/MM/yyyy")
+                                                </td>
+                                                <td>
+                                                    <span class="badge @(attendance.IsPresent ? "bg-success" : "bg-danger")">
+                                                        <i class="fas @(attendance.IsPresent ? "fa-check" : "fa-times") me-1"></i>
+                                                        @(attendance.IsPresent ? "Present" : "Absent")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (!Model.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted py-4">
+                                                    <i class="fas fa-info-circle me-2"></i>No attendance records found
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const highlightId = urlParams.get('highlight');
+            
+            if (highlightId) {
+                const element = document.getElementById('attendance-' + highlightId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .table {
+        --bs-table-hover-bg: rgba(0,0,0,0.02);
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .table-warning {
+        --bs-table-bg: rgba(255, 193, 7, 0.1);
+        transition: background-color 0.3s ease;
+    }
+</style> 

@@ -1,0 +1,148 @@
+@model Quiz
+
+@{
+    ViewData["Title"] = "Quiz Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <!-- Teacher Section -->
+            <div class="card border-0 shadow-lg mb-5">
+                <div class="card-header bg-primary-gradient text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="h5 mb-0 fw-semibold">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Teacher Dashboard
+                        </h3>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Create Quiz Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm hover-effect">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-lg bg-success bg-opacity-10 text-success rounded-circle mb-3 mx-auto">
+                                        <i class="fas fa-plus fa-fw"></i>
+                                    </div>
+                                    <h4 class="h6 fw-semibold mb-2">Create New Quiz</h4>
+                                    <p class="text-muted small mb-3">Create and manage new quizzes for your classes</p>
+                                    <a asp-controller="Quiz" asp-action="Create" class="btn btn-sm btn-success rounded-pill px-4">
+                                        <i class="fas fa-plus me-1"></i> Create Quiz
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View Quizzes Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm hover-effect">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-lg bg-primary bg-opacity-10 text-primary rounded-circle mb-3 mx-auto">
+                                        <i class="fas fa-list-alt fa-fw"></i>
+                                    </div>
+                                    <h4 class="h6 fw-semibold mb-2">View All Quizzes</h4>
+                                    <p class="text-muted small mb-3">Access and manage all your quizzes</p>
+                                    <a asp-controller="Quiz" asp-action="Index" class="btn btn-sm btn-primary rounded-pill px-4">
+                                        <i class="fas fa-arrow-right me-1"></i> View Quizzes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Section -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-success-gradient text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="h5 mb-0 fw-semibold">
+                            <i class="fas fa-user-graduate me-2"></i>Student Dashboard
+                        </h3>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- View Student Quizzes Card -->
+                        <div class="col-md-12">
+                            <div class="card h-100 border-0 shadow-sm hover-effect">
+                                <div class="card-body text-center p-4">
+                                    <div class="icon-lg bg-info bg-opacity-10 text-info rounded-circle mb-3 mx-auto">
+                                        <i class="fas fa-book fa-fw"></i>
+                                    </div>
+                                    <h4 class="h6 fw-semibold mb-2">Student Quizzes</h4>
+                                    <p class="text-muted small mb-3">View and take available quizzes</p>
+                                    <a asp-controller="Quiz" asp-action="StudentQuizzes" class="btn btn-sm btn-info rounded-pill px-4">
+                                        <i class="fas fa-arrow-right me-1"></i> View Quizzes
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modern styling */
+    .icon-lg {
+        width: 60px;
+        height: 60px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .hover-effect {
+        transition: all 0.3s ease;
+        border-top: 3px solid transparent;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+
+    .hover-effect:hover .icon-lg {
+        transform: scale(1.1);
+    }
+
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .bg-success-gradient {
+        background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+    }
+
+    .card-header {
+        border-bottom: none;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .icon-lg {
+            width: 50px;
+            height: 50px;
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 1.5rem !important;
+        }
+    }
+</style> 

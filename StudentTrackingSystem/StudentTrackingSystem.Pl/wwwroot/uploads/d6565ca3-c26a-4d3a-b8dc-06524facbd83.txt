@@ -1,0 +1,31 @@
+font family :Rubik
+background color of any page:#D6EFD8
+.....................
+
+
+sidebar=>
+font size :18px
+text color:#1A5319
+//عند الضغط على اي لينك تكون خلفيته :
+background color:#D6EFD8
+
+
+....................
+
+
+text color in tables :#3D3D3D
+
+
+......................
+
+
+background color of any btn:#508D4E
+
+
+.................
+
+
+background color of most popups:#FFF6E9
+background color of most popups:#F0F5FF
+
+

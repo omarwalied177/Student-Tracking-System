@@ -1,0 +1,193 @@
+﻿@model List<StudentTrackingSystem.Pl.DTOs.AttendanceDTO>
+@using StudentTrackingSystem.DAL.Models
+
+@{
+    ViewData["Title"] = "Add Attendance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0 fw-semibold">
+                                    <i class="fas fa-user-check me-2"></i>Add Attendance
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <!-- Grade Filter -->
+                            <div class="card mb-4 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <form method="get" class="form-inline">
+                                        <div class="form-floating">
+                                            <select name="grade" class="form-select" id="gradeSelect" onchange="this.form.submit()">
+                                                <option value="">All Grades</option>
+                                                @foreach (Grade grade in ViewBag.Grades)
+                                                {
+                                                    if (Context.Request.Query["grade"] == grade.Name)
+                                                    {
+                                                        <option value="@grade.Name" selected>@grade.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@grade.Name">@grade.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <label for="gradeSelect">Filter by Grade</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            @if (!Model.Any())
+                            {
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    All students have their attendance recorded for today.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Student Name</th>
+                                                <th>Grade</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var student in Model)
+                                            {
+                                                <tr id="student-@student.StudentId">
+                                                    <td>@student.StudentName</td>
+                                                    <td>
+                                                        <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                            @student.Grade
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-success btn-sm rounded-pill me-2" onclick="markAttendance(@student.StudentId, true)">
+                                                            <i class="fas fa-check me-1"></i> Present
+                                                        </button>
+                                                        <button class="btn btn-danger btn-sm rounded-pill" onclick="markAttendance(@student.StudentId, false)">
+                                                            <i class="fas fa-times me-1"></i> Absent
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    <script>
+        function markAttendance(studentId, isPresent) {
+            $.ajax({
+                url: '@Url.Action("MarkAttendance", "Attendance")',
+                type: 'POST',
+                data: { studentId: studentId, isPresent: isPresent },
+                success: function (result) {
+                    if (result.success) {
+                        // Reload الصفحة مع فلتر الدرجة ونفس الصفحة بدون تكرار الطالب
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const grade = urlParams.get('grade') || '';
+                        // نعيد تحميل الصفحة بنفس الفلتر
+                        let url = '@Url.Action("AddAttendance", "Attendance")';
+                        if (grade) {
+                            url += '?grade=' + grade;
+                        }
+                        // نخلي الصفحة تعيد تحميل عشان نحدث القائمة وتختفي الطالب اللي تم أخذه حضوره
+                        window.location.href = url;
+                    }
+                },
+                error: function () {
+                    alert('Error marking attendance!');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const highlightId = urlParams.get('highlight');
+
+            if (highlightId) {
+                const row = document.getElementById('student-' + highlightId);
+                if (row) {
+                    row.classList.add('table-warning');
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .table {
+        --bs-table-hover-bg: rgba(0,0,0,0.02);
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .table-warning {
+        --bs-table-bg: rgba(255, 193, 7, 0.1);
+        transition: background-color 0.3s ease;
+    }
+</style>

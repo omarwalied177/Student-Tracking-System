@@ -1,0 +1,150 @@
+@model StudentTrackingSystem.Pl.DTOs.CreateAssignmentDTO
+
+@{
+    ViewData["Title"] = "Create Assignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <h3 class="h5 mb-0 text-center">
+                                <i class="fas fa-plus-circle me-2"></i>Create New Assignment
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Title" class="form-control" required placeholder="Title" />
+                                    <label asp-for="Title">Title</label>
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <textarea asp-for="Description" class="form-control" style="height: 120px" required placeholder="Description"></textarea>
+                                    <label asp-for="Description">Description</label>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select asp-for="GradeId" asp-items="ViewBag.Grades" class="form-select" required>
+                                                <option value="">Select Grade</option>
+                                            </select>
+                                            <label asp-for="GradeId">Grade</label>
+                                            <span asp-validation-for="GradeId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <select asp-for="SubjectId" asp-items="ViewBag.Subjects" class="form-select" required>
+                                                <option value="">Select Subject</option>
+                                            </select>
+                                            <label asp-for="SubjectId">Subject</label>
+                                            <span asp-validation-for="SubjectId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input asp-for="DueDate" type="datetime-local" class="form-control" required />
+                                            <label asp-for="DueDate">Due Date</label>
+                                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input asp-for="TotalMarks" type="number" class="form-control" required min="1" placeholder="Total Marks" />
+                                            <label asp-for="TotalMarks">Total Marks</label>
+                                            <span asp-validation-for="TotalMarks" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label asp-for="AssignmentFile" class="form-label">Assignment File (Optional)</label>
+                                    <input asp-for="AssignmentFile" type="file" class="form-control" />
+                                    <span asp-validation-for="AssignmentFile" class="text-danger"></span>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg rounded-pill btn-hover">
+                                        <i class="fas fa-save me-2"></i>Create Assignment
+                                    </button>
+                                    <a asp-action="TeacherAssignments" class="btn btn-outline-secondary rounded-pill btn-hover">
+                                        <i class="fas fa-times me-2"></i>Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        border: 1px solid #e0e0e0;
+        padding: 0.75rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+    .btn-hover {
+        transition: all 0.3s ease;
+    }
+
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style> 

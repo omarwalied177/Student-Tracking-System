@@ -1,0 +1,97 @@
+body {
+    background-color: #ffffff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #333333;
+}
+
+.main-container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.gender-options {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.gender-options .form-check {
+    margin-bottom: 0;
+}
+
+.student-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 1.5rem;
+}
+
+.photo-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background-color: var(--neutral-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--neutral-border);
+}
+
+.photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--neutral-border);
+}
+
+.parent-info {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--neutral-border);
+}
+
+.default-image {
+    width: 100px;
+    height: 100px;
+    color: var(--neutral-text);
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

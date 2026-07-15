@@ -1,0 +1,47 @@
+.student-form-container {
+    background-color: var(--neutral-bg);
+    border: 1px solid var(--neutral-border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.student-image-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 1.5rem auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    background-color: var(--white-color);
+}
+
+.student-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form-section-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+@media (max-width: 768px) {
+    .student-form-container {
+        padding: 1.5rem;
+    }
+
+    .student-image-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+

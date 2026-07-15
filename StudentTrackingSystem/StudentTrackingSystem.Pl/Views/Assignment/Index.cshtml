@@ -1,0 +1,124 @@
+﻿@using StudentTrackingSystem.DAL.Data.Models
+@model Assignment
+@{
+    ViewData["Title"] = "Assignments Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <h1 class="page-title text-center mb-5">
+                        <i class="fas fa-tasks me-2"></i>Assignments Dashboard
+                    </h1>
+
+                    <div class="row g-4">
+                        <!-- Teacher Section -->
+                        @if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                        {
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-lg hover-effect">
+                                    <div class="card-header bg-primary-gradient text-white py-3">
+                                        <h3 class="h5 mb-0">
+                                            <i class="fas fa-chalkboard-teacher me-2"></i>Teacher Actions
+                                        </h3>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="d-grid gap-3">
+                                            <a asp-controller="Assignment" asp-action="Create" class="btn btn-primary btn-lg rounded-pill btn-hover">
+                                                <i class="fas fa-plus-circle me-2"></i>Create Assignment
+                                            </a>
+                                            <a asp-controller="Assignment" asp-action="TeacherAssignments" class="btn btn-outline-primary btn-lg rounded-pill btn-hover">
+                                                <i class="fas fa-list-alt me-2"></i>View My Assignments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Student Section -->
+                        @if (User.IsInRole("Student"))
+                        {
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-lg hover-effect">
+                                    <div class="card-header bg-success-gradient text-white py-3">
+                                        <h3 class="h5 mb-0">
+                                            <i class="fas fa-user-graduate me-2"></i>Student Actions
+                                        </h3>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="d-grid">
+                                            <a asp-controller="Assignment" asp-action="StudentAssignments" class="btn btn-success btn-lg rounded-pill btn-hover">
+                                                <i class="fas fa-book me-2"></i>View My Assignments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .bg-success-gradient {
+        background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+    }
+
+    .hover-effect {
+        transition: all 0.3s ease;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-5px);
+    }
+
+    .btn-hover {
+        transition: all 0.3s ease;
+    }
+
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .page-title {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+</style>

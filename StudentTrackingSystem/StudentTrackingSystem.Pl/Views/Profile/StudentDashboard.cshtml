@@ -1,0 +1,73 @@
+@using StudentTrackingSystem.DAL.Models
+@model Student
+@{
+    ViewData["Title"] = "لوحة تحكم الطالب";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+                    </div>
+                    <h3 class="card-title mb-3">@Model.FullName</h3>
+                    <p class="text-muted mb-3">@Model.Grade</p>
+                    <div class="text-start">
+                        <p class="mb-2"><i class="bi bi-envelope me-2"></i> @Model.EmailAddress</p>
+                        <p class="mb-2"><i class="bi bi-telephone me-2"></i> @Model.PhoneNo</p>
+                        <p class="mb-2"><i class="bi bi-geo-alt me-2"></i> @Model.Address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="col-md-8">
+            <div class="row">
+                <!-- Total Days Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body text-center">
+                            <h3 class="text-primary">@ViewBag.TotalDays</h3>
+                            <p class="text-muted">إجمالي الأيام</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Present Days Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body text-center">
+                            <h3 class="text-success">@ViewBag.PresentDays</h3>
+                            <p class="text-muted">أيام الحضور</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Absent Days Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body text-center">
+                            <h3 class="text-danger">@ViewBag.AbsentDays</h3>
+                            <p class="text-muted">أيام الغياب</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Rate Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow h-100">
+                        <div class="card-body text-center">
+                            <h3 class="text-info">@ViewBag.AttendanceRate%</h3>
+                            <p class="text-muted">نسبة الحضور</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

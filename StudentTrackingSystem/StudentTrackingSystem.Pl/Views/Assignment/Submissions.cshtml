@@ -1,0 +1,239 @@
+@model IEnumerable<StudentTrackingSystem.DAL.Data.Models.StudentAssignment>
+
+@{
+    ViewData["Title"] = "Assignment Submissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0">
+                                    <i class="fas fa-file-alt me-2"></i>Submissions for: @Model.FirstOrDefault()?.Assignment.Title
+                                </h3>
+                                <a asp-action="TeacherAssignments" class="btn btn-light btn-sm rounded-pill">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Assignments
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            @if (!Model.Any())
+                            {
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    No submissions received yet.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Student Name</th>
+                                                <th>Submission Date</th>
+                                                <th>File</th>
+                                                <th>Status</th>
+                                                <th>Marks</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var submission in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas fa-user-graduate text-primary me-2"></i>
+                                                            @submission.Student.UserName
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if (submission.SubmissionDate.HasValue)
+                                                        {
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="far fa-calendar-alt text-muted me-2"></i>
+                                                                @submission.SubmissionDate.Value.ToString("MMM dd, yyyy HH:mm")
+                                                                @if (submission.SubmissionDate > submission.Assignment.DueDate)
+                                                                {
+                                                                    <span class="badge bg-danger ms-2">Late</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">
+                                                                <i class="fas fa-clock me-1"></i>Not submitted
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(submission.SubmittedFileUrl))
+                                                        {
+                                                            <a href="~/submissions/@submission.SubmittedFileUrl" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill">
+                                                                <i class="fas fa-download me-1"></i> Download
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">
+                                                                <i class="fas fa-file-alt me-1"></i>No file
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (submission.IsSubmitted)
+                                                        {
+                                                            if (submission.IsGraded)
+                                                            {
+                                                                <span class="badge bg-success">
+                                                                    <i class="fas fa-check me-1"></i>Graded
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-warning text-dark">
+                                                                    <i class="fas fa-clock me-1"></i>Pending Grade
+                                                                </span>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-secondary">
+                                                                <i class="fas fa-times me-1"></i>Not Submitted
+                                                            </span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (submission.IsGraded)
+                                                        {
+                                                            <div class="progress" style="height: 20px; width: 120px;">
+                                                                @{
+                                                                    var percentage = (submission.ObtainedMarks / submission.Assignment.TotalMarks) * 100;
+                                                                    var progressClass = percentage >= 50 ? "bg-success" : "bg-danger";
+                                                                }
+                                                                <div class="progress-bar @progressClass" role="progressbar" 
+                                                                     style="width: @percentage%;" 
+                                                                     aria-valuenow="@percentage" 
+                                                                     aria-valuemin="0" 
+                                                                     aria-valuemax="100"
+                                                                     data-bs-toggle="tooltip"
+                                                                     title="@submission.ObtainedMarks / @submission.Assignment.TotalMarks">
+                                                                    @Math.Round((double)percentage, 1)%
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-muted">-</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (submission.IsSubmitted && !submission.IsGraded)
+                                                        {
+                                                            <form asp-action="Grade" method="post" class="d-flex gap-2">
+                                                                <input type="hidden" name="StudentAssignmentId" value="@submission.Id" />
+                                                                <div class="input-group input-group-sm" style="width: 150px;">
+                                                                    <input type="number" name="ObtainedMarks" class="form-control" 
+                                                                           required min="0" max="@submission.Assignment.TotalMarks" 
+                                                                           placeholder="Marks" />
+                                                                    <button type="submit" class="btn btn-success">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .table {
+        --bs-table-hover-bg: rgba(0,0,0,0.02);
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .progress {
+        background-color: #f8f9fa;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .input-group-sm .form-control {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+    }
+
+    .input-group-sm .btn {
+        border-top-right-radius: 0.5rem !important;
+        border-bottom-right-radius: 0.5rem !important;
+    }
+</style> 

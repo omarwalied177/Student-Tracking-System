@@ -1,0 +1,237 @@
+@model IEnumerable<StudentTrackingSystem.Pl.DTOs.AssignmentDetailsDTO>
+
+@{
+    ViewData["Title"] = "My Assignments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0">
+                                    <i class="fas fa-book me-2"></i>My Assignments
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            @if (!Model.Any())
+                            {
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    No assignments available at the moment.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row g-4">
+                                    @foreach (var item in Model)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="card h-100 border-0 shadow-sm hover-effect">
+                                                <div class="card-header bg-light py-3">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h5 class="mb-0 text-primary">@item.Title</h5>
+                                                        <div>
+                                                            @if (item.IsSubmitted)
+                                                            {
+                                                                <span class="badge bg-success me-2">
+                                                                    <i class="fas fa-check-circle me-1"></i>Submitted
+                                                                </span>
+                                                            }
+                                                            <span class="badge bg-primary">@item.Subject</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <small class="text-muted">Teacher:</small>
+                                                        <div class="fw-semibold">@item.TeacherName</div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <small class="text-muted">Grade:</small>
+                                                        <div class="fw-semibold">@item.Grade</div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <small class="text-muted">Description:</small>
+                                                        <p class="mb-0">@item.Description</p>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <small class="text-muted">Due Date:</small>
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="far fa-calendar-alt text-primary me-2"></i>
+                                                            <span>@item.DueDate.ToString("MMM dd, yyyy HH:mm")</span>
+                                                            @{
+                                                                var isOverdue = DateTime.Now > item.DueDate;
+                                                                if (isOverdue)
+                                                                {
+                                                                    <span class="badge bg-danger ms-2">Overdue</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    var timeLeft = item.DueDate - DateTime.Now;
+                                                                    <span class="badge bg-info ms-2">
+                                                                        @(timeLeft.Days > 0 ? $"{timeLeft.Days}d " : "")
+                                                                        @(timeLeft.Hours)h left
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    @if (item.IsGraded)
+                                                    {
+                                                        <div class="mb-3">
+                                                            <small class="text-muted">Grade:</small>
+                                                            <div class="progress mt-2" style="height: 20px;">
+                                                                @{
+                                                                    var percentage = (item.ObtainedMarks.Value / item.TotalMarks) * 100;
+                                                                    var progressClass = percentage >= 50 ? "bg-success" : "bg-danger";
+                                                                }
+                                                                <div class="progress-bar @progressClass" role="progressbar" 
+                                                                     style="width: @percentage%;" 
+                                                                     aria-valuenow="@percentage" 
+                                                                     aria-valuemin="0" 
+                                                                     aria-valuemax="100"
+                                                                     data-bs-toggle="tooltip"
+                                                                     title="@item.ObtainedMarks / @item.TotalMarks">
+                                                                    @Math.Round((double)percentage, 1)%
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(item.FileUrl))
+                                                    {
+                                                        <div class="mb-3">
+                                                            <a href="~/assignments/@item.FileUrl" target="_blank" class="btn btn-outline-primary btn-sm rounded-pill">
+                                                                <i class="fas fa-download me-1"></i> Download Assignment
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="card-footer bg-light">
+                                                    @if (!item.IsSubmitted)
+                                                    {
+                                                        <form asp-action="Submit" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                                            <input type="hidden" name="AssignmentId" value="@item.Id" />
+                                                            <input type="file" name="SubmissionFile" class="form-control form-control-sm" required />
+                                                            <button type="submit" class="btn btn-primary btn-sm rounded-pill">
+                                                                <i class="fas fa-upload me-1"></i> Submit
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="text-center">
+                                                            <span class="text-success">
+                                                                <i class="fas fa-check-circle me-1"></i>
+                                                                Submitted on @item.SubmissionDate?.ToString("MMM dd, yyyy HH:mm")
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <script>
+            Swal.fire({
+                title: 'Success!',
+                text: 'Assignment has been submitted successfully',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#4e73df',
+                timer: 3000,
+                timerProgressBar: true,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        </script>
+    }
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .hover-effect {
+        transition: all 0.3s ease;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+
+    .progress {
+        background-color: #f8f9fa;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .card-footer {
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+</style>

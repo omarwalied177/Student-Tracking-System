@@ -1,0 +1,352 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<!-- Floating Particles Background -->
+<div class="particles" id="particles-js"></div>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a asp-controller="Account" asp-action="SignOut" class="navbar-brand text-white me-auto">
+            <i class="bi bi-box-arrow-left"></i>
+        </a>
+
+        <div class="navbar-brand mx-auto position-absolute start-50 translate-middle-x">
+            <span class="h4 mb-0">Admin Dashboard</span>
+            <span class="badge bg-warning text-dark ms-2">Admin</span>
+        </div>
+
+        <div class="ms-auto d-flex align-items-center">
+            <!-- Notification Bell with Enhanced Popup -->
+            <div class="notification-container me-3 position-relative">
+                <a href="#" class="text-white position-relative" id="notification-bell">
+                    <i class="bi bi-bell-fill fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notification-count" style="font-size: 10px;">
+                        3
+                    </span>
+                </a>
+
+                <!-- Notification Backdrop -->
+                <div class="notification-backdrop"></div>
+
+                <!-- Notification Popup -->
+                <div class="notification-popup">
+                    <div class="notification-header">
+                        <h5>Notifications</h5>
+                        <a href="#" class="mark-all-read">Mark all as read</a>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item unread">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div class="notification-content">
+                                <p>New student registration pending approval</p>
+                                <small>15 minutes ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <div class="notification-content">
+                                <p>System backup completed successfully</p>
+                                <small>2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item unread">
+                            <i class="bi bi-megaphone text-info"></i>
+                            <div class="notification-content">
+                                <p>New teacher account created</p>
+                                <small>4 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="notification-item">
+                            <i class="bi bi-shield-lock text-primary"></i>
+                            <div class="notification-content">
+                                <p>Security audit completed</p>
+                                <small>Yesterday</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <a href="#">View all notifications</a>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="text-white me-3" id="theme-toggle">
+                <i class="bi bi-moon fs-5"></i>
+            </a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle text-white" id="userDropdown" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle fs-5"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><h6 class="dropdown-header">Admin User</h6></li>
+                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="bi bi-person me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" asp-controller="Settings" asp-action="Index"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="SignOut">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<div class="header-background">
+    <div class="header-content">
+        <h1>Welcome to Admin Dashboard</h1>
+        <p>Manage the entire system with comprehensive controls</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container-fluid content-wrapper">
+    <!-- Quick Actions -->
+    <div class="quick-actions mb-5">
+        <div class="container">
+            <h2 class="section-title mb-4">Quick Actions</h2>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <a asp-controller="Student" asp-action="Create" class="quick-action-card">
+                        <div class="icon-wrapper bg-primary">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <span>Add Student</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-controller="Teatcher" asp-action="Create" class="quick-action-card">
+                        <div class="icon-wrapper bg-success">
+                            <i class="bi bi-person-video3"></i>
+                        </div>
+                        <span>Add Teacher</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-controller="Quiz" asp-action="Create" class="quick-action-card">
+                        <div class="icon-wrapper bg-warning">
+                            <i class="bi bi-patch-question"></i>
+                        </div>
+                        <span>Create a Quiz</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a asp-controller="Attendance" asp-action="AttendanceStats" class="quick-action-card">
+                        <div class="icon-wrapper bg-info">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <span>Show Attendance</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Features -->
+    <div class="main-features mb-5">
+        <div class="container">
+            <h2 class="section-title mb-4">Management Features</h2>
+            <div class="row g-4">
+                <!-- Feature Cards -->
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("Index", "Student")">
+                        <div class="card-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <h3>Student Management</h3>
+                        <p>View, add, edit, and manage all student records and profiles</p>
+                        <div class="card-footer">
+                            <span class="badge bg-primary">1245 Students</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("Index", "Teatcher")">
+                        <div class="card-icon">
+                            <i class="bi bi-person-video3"></i>
+                        </div>
+                        <h3>Teacher Management</h3>
+                        <p>Manage teacher accounts, assignments, and permissions</p>
+                        <div class="card-footer">
+                            <span class="badge bg-success">42 Teachers</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("Index", "Attendance")">
+                        <div class="card-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h3>Attendance System</h3>
+                        <p>Track and manage student and teacher attendance records</p>
+                        <div class="card-footer">
+                            <span class="badge bg-info">94% Average</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("ShowForTeacher_Admin", "Quiz")">
+                        <div class="card-icon">
+                            <i class="bi bi-patch-question"></i>
+                        </div>
+                        <h3>Quiz System</h3>
+                        <p>Create, manage, and analyze quizzes and assessments</p>
+                        <div class="card-footer">
+                            <span class="badge bg-warning">18 Active</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("IndexTeacher", "Assignment")">
+                        <div class="card-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <h3>Assignments</h3>
+                        <p>Create, manage, and track student assignments</p>
+                        <div class="card-footer">
+                            <span class="badge bg-danger">5 Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="feature-card" data-link="@Url.Action("Index", "Subject")">
+                        <div class="card-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <h3>Subject Management</h3>
+                        <p>Manage and organize academic subjects and courses</p>
+                        <div class="card-footer">
+                            <span class="badge bg-primary">12 Subjects</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-overview mb-5">
+        <div class="container">
+            <h2 class="section-title mb-4">System Overview</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>Recent Activity</h3>
+                            <a asp-controller="Activity" asp-action="Index" class="btn btn-sm btn-outline-light">View All</a>
+                        </div>
+                        <ul class="activity-list">
+                            <li>
+                                <i class="bi bi-person-add"></i>
+                                <div>
+                                    <p>New student registered - John Doe</p>
+                                    <small>10 minutes ago</small>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="bi bi-calendar-event"></i>
+                                <div>
+                                    <p>Attendance marked for Class 10A</p>
+                                    <small>1 hour ago</small>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="bi bi-journal-plus"></i>
+                                <div>
+                                    <p>New assignment created - Math Quiz</p>
+                                    <small>3 hours ago</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <h3>System Statistics</h3>
+                            <span class="text-success">All systems operational</span>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="students-count">0</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="teachers-count">0</div>
+                                <div class="stat-label">Teachers</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="classes-count">0</div>
+                                <div class="stat-label">Classes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="attendance-rate">0%</div>
+                                <div class="stat-label">Attendance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Student Tracking System</h4>
+                    <p>Comprehensive educational management platform for administrators, teachers, and students.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Support Center</a></li>
+                        <li><a href="#">System Status</a></li>
+                        <li><a href="#">Release Notes</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <ul class="footer-contact">
+                        <li><i class="bi bi-envelope"></i> admin@schoolsystem.edu</li>
+                        <li><i class="bi bi-telephone"></i> (123) 456-7890</li>
+                        <li><i class="bi bi-building"></i> 123 Education St, Campus</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="social-icons">
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-github"></i></a>
+                </div>
+                <p class="copyright">© @DateTime.Now.Year Student Tracking System. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to Top Button -->
+<button id="back-to-top" class="btn btn-primary rounded-circle">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/adminDashboard.js" asp-append-version="true"></script>
+}

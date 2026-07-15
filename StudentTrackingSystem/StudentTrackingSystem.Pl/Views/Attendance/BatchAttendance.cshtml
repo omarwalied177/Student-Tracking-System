@@ -1,0 +1,219 @@
+@model StudentTrackingSystem.Pl.DTOs.BatchAttendanceDTO
+@using StudentTrackingSystem.DAL.Models
+
+@{
+    ViewData["Title"] = "Batch Attendance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 mx-auto">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-header bg-primary-gradient text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0 fw-semibold">
+                                    <i class="fas fa-users-check me-2"></i>Batch Attendance
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <!-- Grade Filter -->
+                            <div class="card mb-4 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <form method="get" class="form-inline">
+                                        <div class="form-floating">
+                                            <select name="grade" class="form-select" id="gradeSelect" onchange="this.form.submit()">
+                                                <option value="">All Grades</option>
+                                                @foreach (Grade grade in ViewBag.Grades)
+                                                {
+                                                    if (Context.Request.Query["grade"] == grade.Name)
+                                                    {
+                                                        <option value="@grade.Name" selected>@grade.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@grade.Name">@grade.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <label for="gradeSelect">Filter by Grade</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            @if (!Model.Students.Any())
+                            {
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    All students have their attendance recorded for today.
+                                </div>
+                            }
+                            else
+                            {
+                                <form asp-action="SaveBatchAttendance" method="post">
+                                    <input type="hidden" asp-for="Grade" />
+                                    <input type="hidden" asp-for="Date" />
+
+                                    <div class="mb-4">
+                                        <button type="button" class="btn btn-success btn-sm rounded-pill me-2" onclick="selectAll(true)">
+                                            <i class="fas fa-check-circle me-1"></i> Select All Present
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm rounded-pill" onclick="selectAll(false)">
+                                            <i class="fas fa-times-circle me-1"></i> Select All Absent
+                                        </button>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Student Name</th>
+                                                    <th>Grade</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.Students.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td>@Model.Students[i].StudentName</td>
+                                                        <td>
+                                                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                                @Model.Students[i].Grade
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="hidden" asp-for="@Model.Students[i].StudentId" />
+                                                            <input type="hidden" asp-for="@Model.Students[i].StudentName" />
+                                                            <input type="hidden" asp-for="@Model.Students[i].Grade" />
+                                                            <div class="form-check form-switch">
+                                                                <input class="form-check-input attendance-toggle" type="checkbox" 
+                                                                       asp-for="@Model.Students[i].IsPresent" 
+                                                                       data-student-id="@Model.Students[i].StudentId">
+                                                                <label class="form-check-label status-label">
+                                                                    @(Model.Students[i].IsPresent ? "Present" : "Absent")
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-primary rounded-pill">
+                                            <i class="fas fa-save me-1"></i> Save Attendance
+                                        </button>
+                                        <a asp-action="ShowAttendance" class="btn btn-secondary rounded-pill ms-2">
+                                            <i class="fas fa-times me-1"></i> Cancel
+                                        </a>
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+
+    <script>
+        function selectAll(isPresent) {
+            $('.attendance-toggle').prop('checked', isPresent);
+            updateLabels();
+        }
+
+        function updateLabels() {
+            $('.attendance-toggle').each(function() {
+                var label = $(this).closest('.form-switch').find('.status-label');
+                label.text($(this).prop('checked') ? 'Present' : 'Absent')
+                     .removeClass('text-success text-danger')
+                     .addClass($(this).prop('checked') ? 'text-success' : 'text-danger');
+            });
+        }
+
+        $(document).ready(function() {
+            $('.attendance-toggle').change(function() {
+                updateLabels();
+            });
+            updateLabels(); // Initialize labels
+        });
+    </script>
+</body>
+</html>
+
+<style>
+    .bg-primary-gradient {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+
+    .table {
+        --bs-table-hover-bg: rgba(0,0,0,0.02);
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .form-check.form-switch {
+        padding-left: 2.5em;
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        cursor: pointer;
+    }
+
+    .form-switch .form-check-input:checked {
+        background-color: var(--bs-success);
+        border-color: var(--bs-success);
+    }
+
+    .form-switch .status-label {
+        font-weight: 500;
+        margin-left: 0.5rem;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style> 

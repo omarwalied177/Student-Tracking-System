@@ -1,0 +1,45 @@
+@model StudentTrackingSystem.PL.DTOs.SubmitAssignmentDTO
+
+@{
+    ViewData["Title"] = "تقديم الواجب";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">تقديم الواجب</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Submit" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <input type="hidden" asp-for="AssignmentId" />
+
+                        <div class="mb-3">
+                            <label asp-for="SubmissionFile" class="form-label">اختر ملف الواجب</label>
+                            <input asp-for="SubmissionFile" class="form-control" type="file" accept=".pdf,.doc,.docx,.txt" />
+                            <span asp-validation-for="SubmissionFile" class="text-danger"></span>
+                            <small class="form-text text-muted">الملفات المسموح بها: PDF, Word, Text</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload me-2"></i> تقديم الواجب
+                            </button>
+                            <a asp-action="StudentAssignments" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> العودة للواجبات
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

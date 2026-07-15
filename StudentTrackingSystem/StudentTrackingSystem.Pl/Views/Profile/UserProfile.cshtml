@@ -1,0 +1,33 @@
+@model AppUser
+@{
+    ViewData["Title"] = "الملف الشخصي";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        @if (!string.IsNullOrEmpty(Model.ImageName))
+                        {
+                            <img src="~/images/@Model.ImageName" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" alt="صورة المستخدم" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+                        }
+                    </div>
+                    <h3 class="card-title mb-3">@Model.FirstName @Model.LastName</h3>
+                    <p class="text-muted mb-3">@ViewBag.UserRoles</p>
+                    <div class="text-start">
+                        <p class="mb-2"><i class="bi bi-envelope me-2"></i> @Model.Email</p>
+                        <p class="mb-2"><i class="bi bi-telephone me-2"></i> @Model.PhoneNumber</p>
+                        <p class="mb-2"><i class="bi bi-person me-2"></i> @Model.UserName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

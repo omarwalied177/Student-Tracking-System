@@ -1,0 +1,185 @@
+@{
+    ViewData["Title"] = "Quiz Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <a href="javascript:history.back()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h1 class="page-title">
+                    <i class="fas fa-question-circle me-2"></i>Quiz Management
+                </h1>
+
+                <div class="row g-4">
+                    <!-- View Quizzes for All Users -->
+                    <div class="col-md-4">
+                        <div class="feature-card">
+                            <div class="icon-lg bg-primary bg-opacity-10 text-primary">
+                                <i class="fas fa-list-alt"></i>
+                            </div>
+                            <h3 class="h5 mb-3">All Quizzes</h3>
+                            <p class="text-muted mb-4">View all available quizzes</p>
+                            <a asp-action="Index" class="btn btn-primary">
+                                <i class="fas fa-eye me-1"></i> View Quizzes
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Admin Options -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-success bg-opacity-10 text-success">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Create Quiz</h3>
+                                <p class="text-muted mb-4">Create a new quiz for any class</p>
+                                <a asp-action="Create" class="btn btn-success">
+                                    <i class="fas fa-plus me-1"></i> Create Quiz
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-info bg-opacity-10 text-info">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Quiz Analytics</h3>
+                                <p class="text-muted mb-4">View performance analytics and statistics</p>
+                                <a asp-action="Analytics" class="btn btn-info">
+                                    <i class="fas fa-chart-line me-1"></i> View Analytics
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Teacher Options -->
+                    @if (User.IsInRole("Teacher"))
+                    {
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <h3 class="h5 mb-3">My Quizzes</h3>
+                                <p class="text-muted mb-4">View and manage quizzes for your classes</p>
+                                <a asp-action="GetAllQuizzes" class="btn btn-primary">
+                                    <i class="fas fa-list-alt me-1"></i> View My Quizzes
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-success bg-opacity-10 text-success">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Create Quiz</h3>
+                                <p class="text-muted mb-4">Create a new quiz for your classes</p>
+                                <a asp-action="Create" class="btn btn-success">
+                                    <i class="fas fa-plus me-1"></i> Create Quiz
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Student Options -->
+                    @if (User.IsInRole("Student"))
+                    {
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Available Quizzes</h3>
+                                <p class="text-muted mb-4">View and take available quizzes</p>
+                                <a asp-action="StudentQuizzes" class="btn btn-primary">
+                                    <i class="fas fa-list-alt me-1"></i> View Quizzes
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-card">
+                                <div class="icon-lg bg-info bg-opacity-10 text-info">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <h3 class="h5 mb-3">Quiz History</h3>
+                                <p class="text-muted mb-4">View your quiz attempts and scores</p>
+                                <a asp-action="StudentHistory" class="btn btn-info">
+                                    <i class="fas fa-clock me-1"></i> View History
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<style>
+    .icon-lg {
+        width: 60px;
+        height: 60px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .bg-teacher {
+        background-color: #4e73df;
+    }
+
+    .btn-teacher {
+        background-color: #4e73df;
+        color: white;
+    }
+
+    .bg-student {
+        background-color: #1cc88a;
+    }
+
+    .btn-student {
+        background-color: #1cc88a;
+        color: white;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>

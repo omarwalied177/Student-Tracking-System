@@ -1,0 +1,248 @@
+﻿@using StudentTrackingSystem.DAL.Data.Models
+@model Assignment
+@{
+    ViewData["Title"] = "Teacher Assignments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/auth-styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            position: relative;
+            margin: 0;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            margin: 2rem auto;
+            width: 95%;
+            max-width: 1200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            border-radius: 20px 20px 0 0 !important;
+        }
+
+        .card-header.success-gradient {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #6B73FF;
+            color: #6B73FF;
+        }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px rgba(107, 115, 255, 0.3);
+        }
+
+        .btn-outline-success {
+            border: 2px solid #43e97b;
+            color: #43e97b;
+        }
+
+        .btn-outline-success:hover {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-4px);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1rem 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li i {
+            margin-right: 10px;
+            color: #6B73FF;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <div class="main-container">
+        <a href="javascript:history.back()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        <div class="page-header">
+            <h1>Assignment Management</h1>
+            <p class="text-muted">Manage assignments and track student progress</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Teacher Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chalkboard-teacher me-2"></i>Teacher Dashboard
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-plus-circle"></i> Create and manage assignments</li>
+                            <li><i class="fas fa-tasks"></i> Track submission status</li>
+                            <li><i class="fas fa-chart-bar"></i> View student performance</li>
+                        </ul>
+                        <div class="d-grid gap-3">
+                            <a class="btn btn-outline-primary" asp-controller="Assignment" asp-action="Create">
+                                <i class="fas fa-plus-circle"></i>Create Assignment
+                            </a>
+                            <a class="btn btn-outline-primary" asp-controller="Assignment" asp-action="TeacherAssignments">
+                                <i class="fas fa-list-alt"></i>View Assignments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Section -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header success-gradient">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-user-graduate me-2"></i>Student Access
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            <li><i class="fas fa-book"></i> Access all assignments</li>
+                            <li><i class="fas fa-upload"></i> Submit completed work</li>
+                            <li><i class="fas fa-star"></i> View grades and feedback</li>
+                        </ul>
+                        <div class="d-grid">
+                            <a class="btn btn-outline-success" asp-controller="Assignment" asp-action="StudentAssignments">
+                                <i class="fas fa-book"></i>Student Assignments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+</body>
+</html>

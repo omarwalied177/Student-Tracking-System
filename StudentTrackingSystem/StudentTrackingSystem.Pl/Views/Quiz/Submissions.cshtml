@@ -1,0 +1,139 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Quiz Submissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Tracking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles" id="particles-js"></div>
+
+    <a href="javascript:history.back()" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h1 class="page-title">
+                        <i class="fas fa-clipboard-list me-2"></i>Quiz Submissions
+                    </h1>
+
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No submissions available yet.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card shadow-sm">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Student Name</th>
+                                                <th>Username</th>
+                                                <th>Submission Time</th>
+                                                <th>Score</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var submission in Model)
+                                            {
+                                                <tr>
+                                                    <td>@submission.StudentName</td>
+                                                    <td>@submission.StudentUsername</td>
+                                                    <td>@submission.SubmissionTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td>
+                                                        @if (submission.IsGraded)
+                                                        {
+                                                            <span class="badge bg-success">@submission.ObtainedMarks / @submission.QuizTotalMarks</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-warning">Not Graded</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (submission.IsSubmitted)
+                                                        {
+                                                            <span class="badge bg-success">Submitted</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-warning">In Progress</span>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (!submission.IsGraded)
+                                                        {
+                                                            <button type="button" class="btn btn-primary btn-sm" 
+                                                                    data-bs-toggle="modal" 
+                                                                    data-bs-target="#gradeModal@(submission.Id)">
+                                                                <i class="fas fa-check"></i> Grade
+                                                            </button>
+
+                                                            <!-- Grade Modal -->
+                                                            <div class="modal fade" id="gradeModal@(submission.Id)" tabindex="-1">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">Grade Submission</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                        </div>
+                                                                        <form asp-action="Grade" method="post">
+                                                                            <div class="modal-body">
+                                                                                <input type="hidden" name="submissionId" value="@submission.Id" />
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label">Enter Marks (Max: @submission.QuizTotalMarks)</label>
+                                                                                    <input type="number" name="marks" class="form-control" 
+                                                                                           required min="0" max="@submission.QuizTotalMarks" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                                <button type="submit" class="btn btn-primary">Save Grade</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="~/js/auth-scripts.js"></script>
+</body>
+</html> 
